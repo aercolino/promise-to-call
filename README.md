@@ -4,7 +4,7 @@ Replace callbacks with promises.
 
 Targets to call can be methods of objects (useful "this") or functions (useless "this").
 
-
+[![Coverage Status](https://coveralls.io/repos/github/aercolino/promise-to-call/badge.svg?branch=master)](https://coveralls.io/github/aercolino/promise-to-call?branch=master)
 
 
 ## Installation
