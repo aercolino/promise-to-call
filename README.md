@@ -2,7 +2,7 @@
 
 Replace callbacks with promises.
 
-Targets to call can be methods of objects (useful "this") of functions (useless "this").
+Targets to call can be methods of objects (useful "this") or functions (useless "this").
 
 
 
