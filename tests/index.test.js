@@ -4,8 +4,8 @@ const sinonTest = require('sinon-test')(sinon);
 const sinonChai = require('sinon-chai');
 const chaiAsPromised = require("chai-as-promised");
 
-const promiseTo = require('../src/promise-to-call.js');
-const newFixtures = require('./new-fixtures');
+const promiseTo = require('../src/index.js');
+const newFixtures = require('./fixtures');
  
 chai.use(sinonChai);
 chai.use(chaiAsPromised);
