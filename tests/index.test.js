@@ -21,21 +21,46 @@ describe('promise-to-call', function () {
 
 	describe('usePromiseClass', function () {
 
-		const SomeThenableClass = function (executor) {};
-		SomeThenableClass.prototype.then = function () {};
-
-		const SomeOtherClass = function (executor) {};
+		const SomePromiseClass = function (executor) {
+			executor(() => {}, () => {});
+		};
+		const SomeOtherClassNoExecutor = function () {};
+		const SomeOtherClassNoResolve = function (executor) {
+			executor('oops', () => {});
+		};
+		const SomeOtherClassNoReject = function (executor) {
+			executor(() => {});
+		};
+		const NotNewable = 'oops';
 
 		it('should set the promise class', sinonTest(function (done) {
-			promiseTo.usePromiseClass(SomeThenableClass);
+			promiseTo.usePromiseClass(SomePromiseClass);
 			const result = promiseTo.$callFunction(() => {});
-			expect(result).to.be.an.instanceof(SomeThenableClass);
+			expect(result).to.be.an.instanceof(SomePromiseClass);
 			done();
 		}));
 
-		it('should throw when the class is not then-able', sinonTest(function (done) {
-			const test = () => { promiseTo.usePromiseClass(SomeOtherClass); }
-			expect(test).to.throw(/then-able/);
+		it('should throw when the promise class is not new-able', sinonTest(function (done) {
+			const test = () => { promiseTo.usePromiseClass(NotNewable); }
+			expect(test).to.throw(/new-able/);
+			done();
+		}));
+
+		it('should throw when the promise executor is not called immediately', sinonTest(function (done) {
+			const test = () => { promiseTo.usePromiseClass(SomeOtherClassNoExecutor); }
+			expect(test).to.throw(/immediately called/);
+			done();
+		}));
+
+		it('should throw when the 1st arg of the promise executor is not a function', sinonTest(function (done) {
+			const test = () => { promiseTo.usePromiseClass(SomeOtherClassNoResolve); }
+			expect(test).to.throw(/1st arg/);
+			done();
+		}));
+
+		it('should throw when the 2nd arg of the promise executor is not a function', sinonTest(function (done) {
+			const test = () => { promiseTo.usePromiseClass(SomeOtherClassNoReject); }
+			expect(test).to.throw(/2nd arg/);
 			done();
 		}));
 

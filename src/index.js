@@ -7,9 +7,13 @@ const promiseToCall = {
      * @param UserPromise
      */
     usePromiseClass(UserPromise = Promise) {
-        if (typeof UserPromise.prototype.then !== 'function') {
-            throw new Error('Expected a then-able `Promise` class');
+        if (UserPromise === Promise) {
+            options.Promise = UserPromise;
+            return;
         }
+        checkExecutorCalledImmediately(UserPromise);
+        checkExecutorCalledWith1stArgFunction(UserPromise);
+        checkExecutorCalledWith2ndArgFunction(UserPromise);
         options.Promise = UserPromise;
     },
 
@@ -48,3 +52,42 @@ const promiseToCall = {
 promiseToCall.usePromiseClass(Promise);
 
 module.exports = promiseToCall;
+
+// ---
+
+function checkExecutorCalledImmediately(UserPromise) {
+    let executorImmediatelyRun = false;
+    try {
+        const promise = new UserPromise((resolve) => {
+            executorImmediatelyRun = true;
+            if (typeof resolve === 'function') {
+                resolve();
+            }
+        });
+    } catch(e) {
+        throw new Error('Expected a new-able `Promise` class');
+    }
+    if (!executorImmediatelyRun) {
+        throw new Error('Expected an immediately called `Promise` executor');
+    }
+}
+
+function checkExecutorCalledWith1stArgFunction(UserPromise) {
+    const promise = new UserPromise(resolve => {
+        try {
+            resolve();
+        } catch(e) {
+            throw new Error('Expected a `Promise` executor called with a function as 1st arg');
+        }
+    });
+}
+
+function checkExecutorCalledWith2ndArgFunction(UserPromise) {
+    const promise = new UserPromise((resolve, reject) => {
+        try {
+            reject();
+        } catch(e) {
+            throw new Error('Expected a `Promise` executor called with a function as 2nd arg');
+        }
+    });
+}
