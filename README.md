@@ -19,7 +19,7 @@ $ npm install promise-to-call
 ## Usage
 
 ```js
-var promiseTo = require('promise-to-call');
+const promiseTo = require('promise-to-call');
 
 promiseTo.$callMethod(someObject, 'someMethod', 2, 3)
     .then((data) => { ... })
@@ -31,6 +31,24 @@ promiseTo.$callFunction(someFunction, 2, 3)
 ```
 
 
+
+### Example
+
+```js
+const AWS = require('aws-sdk');
+const promiseTo = require('promise-to-call');
+
+function whoAmI() {
+    const stsService = new AWS.STS({ region: 'us-east-1' });
+    return promiseTo.$callMethod(stsService, 'getCallerIdentity', {})
+        .then((data) => {
+            return data.Account;
+        })
+        .catch(console.error);
+}
+
+whoAmI().then(console.log); // -> 123456789012
+```
 
 
 ## Options
