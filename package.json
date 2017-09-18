@@ -7,7 +7,7 @@
   },
   "main": "src/index.js",
   "scripts": {
-    "test": "mocha tests/**/*.test.js"
+    "test": "nyc mocha tests/**/*.test.js"
   },
   "keywords": [
     "nodejs",
@@ -20,6 +20,7 @@
     "chai": "^4.1.2",
     "chai-as-promised": "^7.1.1",
     "mocha": "^3.5.3",
+    "nyc": "^11.2.1",
     "sinon": "^3.2.1",
     "sinon-chai": "^2.13.0",
     "sinon-test": "^2.1.0"
